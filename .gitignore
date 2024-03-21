@@ -84,5 +84,5 @@ CMakeLists.txt.user*
 *.out
 *.synctex.gz
 
-*.pdspak
+*.pdsbak
 *.workspace
