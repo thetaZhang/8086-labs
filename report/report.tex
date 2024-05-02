@@ -3,7 +3,9 @@
 \usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs, graphicx, float, subfigure, caption, makecell, longtable,framed}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
+\usepackage{indentfirst}
 \usepackage{labels}
+\setlength{\parindent}{2em}
 \renewcommand{\lstlistingname}{code}
 \lstset{
     language=C, % 设置语言
@@ -53,8 +55,8 @@
     \begin{figure}[!h]
         \centering
         \includegraphics[width=0.8\textwidth]{img/fig1-183decoder.png}
-        \label{fig:decoder}
         \caption{I/O译码电路}
+        \label{fig:decoder}
     \end{figure} 
     输入口（74LS244）和输出口（74LS273）的片选端口分别为Device1和Device2，通过74LS138进行IO地址译码，如图{\ref{fig:decoder}}。
     当Device1为低电平，选中74LS244，即为输入；当Device2为低电平，选中74LS273，即为输出。根据译码器连接方式，输入端口地址80H，输出端口地址88H。
@@ -87,8 +89,52 @@
     \section{内存扩展和I/O空间操作}
     \subsection{8255接口操作}
     \subsubsection{8255在I/O空间的地址}
+    8255的$\overline{\text{CS}}$为引脚，为低电平时8255才工作，其连接在译码器Y2，由地址Addr7-Addr3控制，如图。
+    要选片8255，Addr7-Adddr3应为10010。
+    此外8255的A、B、C三个口和控制寄存器的选择由A1、A0决定，分别由Addr2、Addr1控制。8255使用低8为数据线，
+    对应偶地址，Addr0为0。因此8255的地址分别为：
+
+    A(A1A0=00):10010000B=90H
+
+    B(A1A0=00):10010010B=92H
+
+    C(A1A0=00):10010100B=94H
+
+    控制寄存器(A1A0=00):100010110B=96H
+    \subsubsection{接收输入并通过数码管和LED输出}
+    根据8255连接方式，如图，A口高4位连接LED，A口低4位连接数码管位选，B口连接数码管段选，
+    C口连接开关输入。故应该将8255设置为方式0，A口为输出，B口为输出，C口为输入，对应控制字10001001B。
+
+    将控制字输出至8255的控制寄存器完成8255的初始化，然后通过C口读入开关量，取其高4位并将低4位变为1110B
+    输出至A口实现LED显示和数码管位选，根据低4位输出段码至B口实现数码管段选。在输出段码时，可预先将1-F的段码
+    存储在数据段，输出时根据相应的值寻址并取出。
+
+
+    \subsubsection{接收输入并通过多位数码管输出}
+    该实验8255连接和初始化配置与上个实验相同。由于需要数码管多位显示不同的数字，而数码管同时
+    只能接收一个段码的输入，因此需要在数码管的显示周期内快速切换显示的段码和位选，以实现多位显示。
+
+    \subsubsection{实验中的问题与解决}
+    \paragraph{(1)} 在进行I/O操作时，由于输入和输出只能通过AX/AL寄存器进行，直接操作输入量会被覆盖。
+    应当在输入后保存输入量以便进行多次操作。
+
+    \paragraph{(2)} 在该实验中需要对一个寄存器进行移位SHR右移4位，
+    但直接 SHR AL,4会报错，因为用立即数来移位只能移动1位，移动多位
+    应当先在一个寄存器中保存移位值，再进行移位操作。
+
+    \paragraph{(3)} 在通过快速切换段码和位选来实现数码管多位显示不同数字时，
+    会出现显示乱码的情况。这是因为切换过快导致重叠，因此应该在切换之间加上短时间的延迟。
+
+
+    
 
     \subsection{内存扩展}
+    \subsubsection{内存地址和大小}
+    根据原理图中内存地址译码部分和内存芯片部分，如图，内存由两片32KB的芯片组成，为U10和U11，分别对应偶地址和奇地址。
+    总的内存容量为64KB。根据地址译码电路，当Addr19-Addr16为0100B时，Y4为0，能选中内存芯片，Addr15-Addr1为片内地址，
+    Addr0在U10和U11中选择，决定奇偶地址，故地址范围是40000H-4FFFFH。
+    \subsubsection{内存写入}
+    已知U10和U11内存范围是40000H-4FFFFH，可将4000H作为段基址，就是对U10和U11进行操作。
 
     \section{定时器、计数器的应用}
 
