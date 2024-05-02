@@ -1,3 +1,4 @@
+; 功能：模拟十字路交通灯
 PortIn	EQU	80h	;定义输入端口号
 PortOut	EQU	88h	;定义输出端口号
 
@@ -91,5 +92,7 @@ delay2 PROC ;长时间延时
    CALL delay1
    RET
 delay2 ENDP
+
+END
 	 
 	 
