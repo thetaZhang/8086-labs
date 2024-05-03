@@ -54,16 +54,19 @@
     \subsection{读入开关状态并输出}
     \begin{figure}[!h]
         \centering
-        \includegraphics[width=0.8\textwidth]{img/fig1-183decoder.png}
-        \caption{I/O译码电路}
-        \label{fig:decoder}
+        \subfigure[]{ \includegraphics[width=0.4\textwidth]{img/fig1-183decoder.png}
+        \label{fig:decoder}}
+        \hfil
+        \subfigure[]{ \includegraphics[width=0.4\textwidth]{img/JiaotongLEdout.png}
+        \label{fig:outled}}
+        \caption{(a)IO译码电路. (b)交通灯LED连接}
     \end{figure} 
     输入口（74LS244）和输出口（74LS273）的片选端口分别为Device1和Device2，通过74LS138进行IO地址译码，如图{\ref{fig:decoder}}。
     当Device1为低电平，选中74LS244，即为输入；当Device2为低电平，选中74LS273，即为输出。根据译码器连接方式，输入端口地址80H，输出端口地址88H。
     
     因此从输入端口读入开关状态，取反输出到输出端口，即可实现开关状态的读入和输出。
     \subsection{模拟交通灯}
-    如图，交通灯为6个分为2组的共阳级LED，其另一端接在74LS273输出端口，
+    如图\ref{fig:outled}，交通灯为6个分为2组的共阳级LED，其另一端接在74LS273输出端口，
     当对应位输出低电平时，LED亮，则每一种亮灯状态对应一个8位编码，将该编码
     从74LS273的端口地址输出就可以按照对应状态点亮LED。
 
@@ -89,7 +92,18 @@
     \section{内存扩展和I/O空间操作}
     \subsection{8255接口操作}
     \subsubsection{8255在I/O空间的地址}
-    8255的$\overline{\text{CS}}$引脚为低电平时8255才工作，其连接在译码器Y2，由地址Addr7-Addr3控制，如图。
+
+    \begin{figure}[!h]
+        \centering
+        \subfigure[]{ \includegraphics[width=0.4\textwidth]{img/138decoderand8255.png}
+        \label{fig:138and8255}}
+        \hfil
+        \subfigure[]{ \includegraphics[width=0.5\textwidth]{img/8255IO.png}
+        \label{fig:8255IO}}
+        \caption{(a)8255地址译码. (b)8255IO连接}
+    \end{figure} 
+
+    8255的$\overline{\text{CS}}$引脚为低电平时8255才工作，其连接在译码器Y2，由地址Addr7-Addr3控制，如图\ref{fig:138and8255}。
     要选片8255，Addr7-Adddr3应为10010B。
     8255的A、B、C三个口和控制寄存器的选择由A1、A0决定，分别由Addr2、Addr1控制。8255使用低8为数据线，
     对应偶地址，Addr0为0。因此8255的地址分别为：
@@ -102,7 +116,7 @@
 
     控制寄存器(A1A0=11):10010110B=96H
     \subsubsection{接收输入并通过数码管和LED输出}
-    根据8255连接方式，如图，A口高4位连接LED，A口低4位连接数码管位选，B口连接数码管段选，
+    根据8255连接方式，如图\ref{fig:8255IO}，A口高4位连接LED，A口低4位连接数码管位选，B口连接数码管段选，
     C口连接开关输入。故应该将8255设置为方式0，A口为输出，B口为输出，C口为输入，对应控制字10001001B。
 
     将控制字输出至8255的控制寄存器完成8255的初始化，然后通过C口读入开关量，取其高4位并将低4位变为1110B
