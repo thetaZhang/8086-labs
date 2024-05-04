@@ -82,14 +82,31 @@
     \subsection{修改选片地址}
     \begin{figure}[!h]
         \centering
-        \includegraphics[width=0.6\textwidth]{img/change.png}
-        \caption{修改IO选片地址}
-        \label{fig:change}
-    \end{figure}
-    在该电路中，74LS244和74LS273的片段端口分别为Device1和Device2，这两个端口连接在译码器的输出端，而地址总线连接在译码器的
-    输入端，输入地址决定译码器的哪个输出口为低电平从而使能I/O端口芯片。因此改变Device1和Device2的在译码器上的位置就可以改变
-    对应的片选地址。如图\ref{fig:change}修改即可。
+        \subfigure[\fontsize{8pt}{14pt}\selectfont{74LS244地址90、92、94、96}]{ \includegraphics[width=0.35\textwidth]{img/change1.png}
+        \label{fig:change1}}
+        \hfil
+        \subfigure[\fontsize{8pt}{14pt}\selectfont{74LS244地址91、93、95、97}]{ \includegraphics[width=0.35\textwidth]{img/change2.png}
+        \label{fig:change2}}
+        \hfil
+        \subfigure[\fontsize{8pt}{14pt}\selectfont{74LS273地址A0、A2、A4、A6}]{ \includegraphics[width=0.35\textwidth]{img/change3.png}
+        \label{fig:change3}}
+        \hfil
+        \subfigure[\fontsize{8pt}{14pt}\selectfont{74LS273地址A1、A3、A5、A7}]{ \includegraphics[width=0.35\textwidth]{img/change4.png}
+        \label{fig:change4}}
+        \caption{修改选片地址}
+    \end{figure} 
+    
+    在该电路中，74LS244和74LS273的片段端口分别为Device1和Device2，这两个端口连接在译码器的输出端，而地址总线Addr7-Addr3连接在译码器的
+    输入端，输入地址决定译码器的哪个输出口为低电平从而使能I/O端口芯片，因此改变Device1和Device2的在译码器上的位置就可以改变
+    对应的片选地址的Addr7-Addr3。而IO芯片使用低8位数据线时，对应偶地址，Addr0=0，使用高8位数据线时，对应奇地址，Addr0=1。
+    Addr2-Addr1与IO选片地址无关。
 
+    对于74Ls244，要将其地址改为90H-97H，其中90H、92H、94H、96H均为偶地址且译码器Y2输出0，有相同的连接方式，如图\ref{fig:change1}；
+    91H、93H、95H、97H均为奇地址且译码器Y2输出0，有相同的连接方式，如图\ref{fig:change2}。
+
+    对于74LS273，要将其地址改为A0H-A7H，其中A0、A2、A4、A6均为偶地址且译码器Y4输出0，有相同的连接方式，如图\ref{fig:change3}；
+    A1、A3、A5、A7均为奇地址且译码器Y4输出0，有相同的连接方式，如图\ref{fig:change4}。
+    
     要在修改选片地址后完成开关状态的写入和输出，只需将源代码中的输入和输出端口地址修改为新的地址即可。
 
     \subsection{实验中的问题与解决}

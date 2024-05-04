@@ -1,6 +1,7 @@
 ; 功能：读取开关量状态，取反后输出（修改了端口地址
-PortIn	EQU	90h	;定义输入端口号，修改为90h
-PortOut	EQU	0A0h	;定义输出端口号，修改为0A0h
+PortIn	EQU	90h	;定义输入端口号，改为任意修改后的地址，如90h
+PortOut	EQU	0A0h	;定义输出端口号，改为任意修改后的地址，如A0h
+
         
 
 Again:
