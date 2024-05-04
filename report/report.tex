@@ -80,9 +80,15 @@
     要实现灯闪烁的效果可以通过在LED的亮和灭的状态中快速切换实现，多次切换的过程可以通过
     循环语句完成。在切换中也需要短时间的延时才能看清变化。
     \subsection{修改选片地址}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=0.6\textwidth]{img/change.png}
+        \caption{修改IO选片地址}
+        \label{fig:change}
+    \end{figure}
     在该电路中，74LS244和74LS273的片段端口分别为Device1和Device2，这两个端口连接在译码器的输出端，而地址总线连接在译码器的
     输入端，输入地址决定译码器的哪个输出口为低电平从而使能I/O端口芯片。因此改变Device1和Device2的在译码器上的位置就可以改变
-    对应的片选地址。要改为，只需把，如图。
+    对应的片选地址。如图\ref{fig:change}修改即可。
 
     要在修改选片地址后完成开关状态的写入和输出，只需将源代码中的输入和输出端口地址修改为新的地址即可。
 
