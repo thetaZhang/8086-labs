@@ -143,9 +143,20 @@
     
 
     \subsection{内存扩展}
+
+    \begin{figure}[!h]
+        \centering
+        \subfigure[]{ \includegraphics[width=0.2\textwidth]{img/memorychip.png}
+        \label{fig:memorychip}}
+        \hfil
+        \subfigure[]{ \includegraphics[width=0.6\textwidth]{img/memorychipselectdecode.png}
+        \label{fig:memorychipselectdecode}}
+        \caption{(a)内存芯片. (b)内存地址译码}
+    \end{figure}
+
     \subsubsection{内存地址和大小}
-    根据原理图中内存地址译码部分和内存芯片部分，如图，内存由两片32KB的芯片组成，为U10和U11，分别对应偶地址和奇地址。
-    总的内存容量为64KB。根据地址译码电路，当Addr19-Addr16为0100B时，Y4为0，能选中内存芯片，Addr15-Addr1为片内地址，
+    根据原理图中内存芯片部分，如图\ref{fig:memorychip}，内存由两片32KB的芯片组成，为U10和U11，分别对应偶地址和奇地址。
+    总的内存容量为64KB。根据地址译码电路，如图\ref{fig:memorychipselectdecode}，当Addr19-Addr16为0100B时，Y4为0，能选中内存芯片，Addr15-Addr1为片内地址，
     Addr0在U10和U11中选择，决定奇偶地址，故地址范围是40000H-4FFFFH。
     \subsubsection{内存写入}
     已知U10和U11内存范围是40000H-4FFFFH，可将4000H作为段基址，就是对U10和U11进行操作。
@@ -156,14 +167,34 @@
     当操作完所有内存后，需要结束循环，由于偏移地址寄存器（16bit）的可表示的内存单元数与总的内存容量一致（64K），
     当出现进位时恰操作完，因此进位标志可以作为循环终止的判断条件。
     \subsubsection{修改内存地址}
-    要使内存地址从80000H开始，可修改译码器输出的连接位置，如图
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{img/newmemoryaddr.png}
+        \caption{修改内存起始地址}
+        \label{fig:newmemoryaddr}
+    \end{figure}
+    要使内存地址从80000H开始，可修改译码器输出的连接位置，如图\ref{fig:newmemoryaddr}。
+    内存地址从80000H开始，则Addr19-Addr16应为1000B，此时译码器Y0输出低电平，应将Y0与后续电路连接。
+
+    修改内存地址后的写入程序与之前完全一致，只需将段基址改为8000H即可。
     \subsubsection{实验中的问题与解决}
     \paragraph{(1)} 在该实验中，需要修改段寄存器DS的值，而段寄存器只能通过寄存器寻址方式赋值，不能用立即数寻址。
     \paragraph{(2)} 8086在操作内存时，默认是以字为单位进行操作，因此在本实验需要在代码中指明内存操作数的宽度属性是字节。
     \section{定时器、计数器的应用}
     \subsection{8255配置和应用}
     \subsubsection{8255初始化}
-    8255的$\overline{\text{CS}}$引脚为低电平时8255才工作，其连接在译码器Y2，由地址Addr8-Addr4控制，如图。
+
+    \begin{figure}[!h]
+        \centering
+        \subfigure[]{ \includegraphics[width=0.42\textwidth]{img/lab38255select.png}
+        \label{fig:lab3_8255}}
+        \hfil
+        \subfigure[]{ \includegraphics[width=0.45\textwidth]{img/lab38253select.png}
+        \label{fig:lab3_8253}}
+        \caption{(a)8255地址译码. (b)8253地址译码}
+    \end{figure} 
+    
+    8255的$\overline{\text{CS}}$引脚为低电平时8255才工作，其连接在译码器Y2，由地址Addr8-Addr4控制，如图\ref{fig:lab3_8255}。
     要选片8255，Addr8-Adddr4应为10010B。
     8255的A、B、C三个口和控制寄存器的选择由A1、A0决定，分别由Addr2、Addr1控制。8255使用高8位数据线，
     对应奇地址，Addr0为1。因此8255的地址分别为：
@@ -192,7 +223,7 @@
     在改变PC6的值时，为了不影响C口其他引脚的值，可以通过OR指令与01000000B进行或操作来令其为1，通过AND指令与10111111B进行与操作令其为0，不会影响其他位。
     \subsubsection{8253配置和应用}
     \subsubsection{8253初始化并输出10ms方波}
-    8253的$\overline{\text{CS}}$引脚为低电平时8253才工作，其连接在译码器Y0，由地址Addr8-Addr4控制，如图。
+    8253的$\overline{\text{CS}}$引脚为低电平时8253才工作，其连接在译码器Y0，由地址Addr8-Addr4控制，如图\ref{fig:lab3_8253}。
     要选片8253，Addr8-Adddr4应为10000B。
     8253的0，1，2三个计数器的选择由A1，A0决定，分别由Addr2，Addr1控制。8253使用高8位数据线，
     对应偶地址，Addr0为0。因此8253的地址分别为：
